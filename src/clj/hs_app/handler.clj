@@ -2,6 +2,7 @@
   (:require
    [hs-app.middleware :refer [middleware]]
    [hs-app.services :refer [get-patients
+                            get-patient
                             create-patient
                             edit-patient
                             delete-patient]]
@@ -49,8 +50,11 @@
 
 
 (def routes [["/" {:get {:handler index-handler}}]
-             ["/:id" {:get {:handler index-handler
+             ["/view/:id" {:get {:handler index-handler
                             :parameters {:path {:id s/Int}}}}]
+             ["/edit/:id" {:get {:handler index-handler
+                                 :parameters {:path {:id s/Int}}}}]
+             ["/create" {:get {:handler index-handler}}]
 
              ["/api"
               ["/patients" {:get get-patients ;; TODO add filter and pagination
@@ -61,12 +65,14 @@
                                                        :policy_number s/Int}}
                                    :handler create-patient}}]
 
-              ["/patient/:id" {:put {:parameters {:path {:id s/Int}
-                                                  :body {(s/optional-key :fullname) s/Str
-                                                         (s/optional-key :gender) s/Int
-                                                         (s/optional-key :birth_date) s/Str
-                                                         (s/optional-key :address) s/Str
-                                                         (s/optional-key :policy_number) s/Int}}
+              ["/patient/:id" {:get {:parameters {:path {:id s/Int}}
+                                     :handler get-patient}
+                               :put {:parameters {:path {:id s/Int}
+                                                  :body {:fullname s/Str
+                                                         :gender s/Int
+                                                         :birth_date s/Str
+                                                         :address s/Str
+                                                         :policy_number s/Int}}
                                      :handler edit-patient}
                                :delete {:parameters {:path {:id s/Int}}
                                         :handler delete-patient}}]]])

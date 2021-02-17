@@ -43,7 +43,7 @@ header, footer {
   height: 3rem;
   width: 100%;
   background-color: rgb(33, 142, 206);
-  padding: 0.1rem;
+  padding: 8px;
   display: flex;
   align-items: center;
 }

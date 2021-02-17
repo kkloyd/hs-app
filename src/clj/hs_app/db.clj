@@ -41,7 +41,7 @@
                   db-query)]
     patients))
 
-(defn get-patient [{:keys [id]}]
+(defn get-patient-by-id [id]
   (let [patient (->
                  (hh/select :*)
                  (hh/from :patients)
@@ -51,27 +51,46 @@
     patient))
 
 (defn delete-patient [id]
-  (let [patient (->
-                  (hh/delete-from :patients)
-                  (hh/where := :id id)
-                  h/format
-                  db-query-one)]
-    patient))
+  (let [deleted (->
+                 (hh/delete-from :patients)
+                 (hh/where := :id id)
+                 h/format
+                 db-query-one)]
+    deleted))
+
+(defn update-patient [id {:keys [fullname gender birth_date address policy_number]}]
+  (let [updated (->
+                 (hh/update :patients)
+                 (hh/sset {:fullname fullname
+                           :gender gender
+                           :birth_date birth_date
+                           :address address
+                           :policy_number policy_number})
+                 (hh/where := :id id)
+                 h/format
+                 db-query-one)]
+    updated))
 
 (comment
   db
+  (->
+   (hh/select :*, :%count.id)
+   (hh/from :patients)
+   h/format)
+
   (njdbc/execute! db ["CREATE TABLE patients(id SERIAL NOT NULL, 
                       fullname VARCHAR(100) NOT NULL, 
                       gender SMALLINT NOT NULL, 
                       birth_date VARCHAR(20) NOT NULL, 
                       address VARCHAR(100) NOT NULL, 
                       policy_number BIGINT NOT NULL)"])
-  
+
   (njdbc/execute! db ["drop table patients"])
 
   (njdbc/execute! db ["delete from patients"])
 
   (get-all-patients)
+  (get-patient-by-id 11)
   (delete-patient 16)
 
   (create-patient {:fullname "Sherlock Holmes"
@@ -79,4 +98,5 @@
                    :birth_date "01.01.1989"
                    :address "221B Baker St, Marylebone, London NW1 6XE, UK"
                    :policy_number 123412341314})
-  )
+
+  (println "sometext"))

@@ -18,8 +18,7 @@
                  [pez/clerk "1.0.0"]
                  [venantius/accountant "0.2.5"
                   :exclusions [org.clojure/tools.reader]]
-                 [cljs-http "0.1.46"]
-                 [org.clojure/core.async "1.3.610"]
+                 [cljs-ajax "0.8.1"]
                  [org.postgresql/postgresql "42.2.18"]
                  [honeysql "1.0.444"]
                  [seancorfield/next.jdbc "1.1.613"]]
