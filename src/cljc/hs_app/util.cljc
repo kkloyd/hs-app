@@ -1,7 +1,5 @@
 (ns hs-app.util)
 
-
-;; female 0, male 1
 (def gender-types
   "gender types: 0 - female, 1 - male"
   `(0 1))
@@ -12,8 +10,14 @@
   (some #(= elm %) coll))
 
 (defn valid-gender?
+  "check if value exists inside gender-types"
   [gender]
   (in? gender-types gender))
+
+(defn gender-str [gender]
+  (cond
+    (= gender 0) "Ж"
+    (= gender 1) "М"))
 
 (comment
   (in? gender-types 0)

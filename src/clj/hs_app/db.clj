@@ -97,6 +97,6 @@
                    :gender 1
                    :birth_date "01.01.1989"
                    :address "221B Baker St, Marylebone, London NW1 6XE, UK"
-                   :policy_number 123412341314})
+                   :policy_number 423412341314})
 
   (println "sometext"))

@@ -16,9 +16,7 @@
                                  coerce-request-middleware
                                  coerce-response-middleware]]
    [reitit.ring.middleware.exception :refer [exception-middleware]]
-   [reitit.ring.middleware.muuntaja :refer [format-request-middleware
-                                            format-response-middleware
-                                            format-negotiate-middleware]]))
+   [reitit.ring.middleware.muuntaja :refer [format-middleware]]))
 
 (defn head []
   [:head
@@ -50,8 +48,6 @@
 
 
 (def routes [["/" {:get {:handler index-handler}}]
-             ["/view/:id" {:get {:handler index-handler
-                            :parameters {:path {:id s/Int}}}}]
              ["/edit/:id" {:get {:handler index-handler
                                  :parameters {:path {:id s/Int}}}}]
              ["/create" {:get {:handler index-handler}}]
@@ -82,10 +78,8 @@
 (def router (fn [] (reitit-ring/router [routes]
                                        {:data  {:muuntaja m/instance
                                                 :coercion coercion
-                                                :middleware [format-negotiate-middleware
-                                                             format-response-middleware
+                                                :middleware [format-middleware
                                                              exception-middleware
-                                                             format-request-middleware
                                                              coerce-exceptions-middleware
                                                              coerce-request-middleware
                                                              coerce-response-middleware]}})))
