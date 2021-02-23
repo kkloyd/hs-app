@@ -79,7 +79,8 @@
                         :pretty-print true}}}}
   :doo {:build "test"
         :alias {:default [:chrome]}}
-
+  :test-paths ["test/clj"]
+  
   :figwheel
   {:http-server-root "public"
    :server-port 3449

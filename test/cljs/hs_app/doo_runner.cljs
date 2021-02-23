@@ -1,5 +1,5 @@
 (ns hs-app.doo-runner
   (:require [doo.runner :refer-macros [doo-tests]]
-            [hs-app.core-test]))
+            [hs-app.cljs.test]))
 
-(doo-tests 'hs-app.core-test)
+(doo-tests 'hs-app.cljs.test)

@@ -1,4 +1,4 @@
-(ns hs-app.core-test
+(ns hs-app.cljs.test
   (:require
    [cljs.test :refer-macros [is are deftest testing use-fixtures]]
    [reagent.core :as reagent :refer [atom]]
