@@ -110,6 +110,7 @@
                                 (pjstadig.humane-test-output/activate!)]
 
                    :env {:dev true}}
+             :test {:env {:dev false :test true}}
 
              :uberjar {:hooks [minify-assets.plugin/hooks]
                        :source-paths ["env/prod/clj"]

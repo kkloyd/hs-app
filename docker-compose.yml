@@ -5,8 +5,17 @@ services:
     container_name: db_container
     image: postgres:13
     ports:
-      - 5432:5432
+      - 5440:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: patients_db
+  db_test:
+    container_name: db_container_test
+    image: postgres:13
+    ports:
+      - 5441:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: patients_db_test

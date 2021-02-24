@@ -51,17 +51,17 @@
 
 (comment
 
-  (create-patient {:parameters {:body {:fullname "Test testovich Testov"
+  (create-patient {:parameters {:body {:fullname "Sherlock Holmes"
                                        :gender 1
                                        :birth_date "02.02.1912"
                                        :address "221B Baker St, Marylebone, London NW1 6XE, UK"
                                        :policy_number 423412341314}}})
 
   (get-patients [])
-  (get-patient {:parameters {:path {:id 59}}})
+  (get-patient {:parameters {:path {:id 3}}})
 
   (edit-patient {:parameters {:path {:id 5}
-                              :body {:fullname "Test testovich Testov"
+                              :body {:fullname "Edited user"
                                      :gender 0
                                      :birth_date "02.02.1912"
                                      :address "221B Baker St, Marylebone, London NW1 6XE, UK"

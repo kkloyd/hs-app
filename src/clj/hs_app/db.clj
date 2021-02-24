@@ -1,13 +1,18 @@
 (ns hs-app.db
-  (:require [next.jdbc :as njdbc]
+  (:require [config.core :refer [env]]
+            [next.jdbc :as njdbc]
             [next.jdbc.result-set :as rs]
             [honeysql.core :as h]
             [honeysql.helpers :as hh]))
 
+(def dbname (if (:test env) "patients_db_test" "patients_db"))
+(def dbport (if (:test env) "5441" "5440"))
+
 (def db-config
   {:dbtype "postgresql"
-   :dbname "patients_db"
+   :dbname dbname
    :host "localhost"
+   :port dbport
    :user "postgres"
    :password "postgres"})
 
@@ -70,6 +75,17 @@
                  h/format
                  db-query-one)]
     updated))
+
+
+(defn create-table-patients [] (njdbc/execute! db ["CREATE TABLE patients(id SERIAL NOT NULL, 
+                      fullname VARCHAR(100) NOT NULL, 
+                      gender SMALLINT NOT NULL, 
+                      birth_date VARCHAR(20) NOT NULL, 
+                      address VARCHAR(100) NOT NULL, 
+                      policy_number BIGINT NOT NULL)"]))
+
+(defn drop-table-patients [] (njdbc/execute! db ["drop table patients"]))
+
 
 (comment
   db
