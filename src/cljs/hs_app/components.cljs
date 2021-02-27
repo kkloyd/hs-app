@@ -13,8 +13,7 @@
 ;; Patients List
 (defn delete-handler [id fullname]
   (let [confirm? (js/confirm (str "Удалить пациента с id " id " и именем " fullname " ?"))]
-    (if (= confirm? true) (delete-patient! id)
-        :else)))
+    (when (= confirm? true) (delete-patient! id))))
 
 (defn patients-list [patients]
   [:ul.patients-list
@@ -84,9 +83,13 @@
 
        (if (nil? id)
          [:button.btn.btn-primary
-          {:on-click #(create-patient! @f status-ok)}
+          {:on-click #(create-patient! @f status-ok) :disabled (= @form-copy @f)}
           "Сохранить"]
 
          [:button.btn.btn-success
-          {:on-click #(edit-patient! id (dissoc @f :id) status-ok)}
-          "Редактировать"])])))
+          {:on-click #(edit-patient! id (dissoc @f :id) status-ok) :disabled (= @form-copy @f)}
+          "Редактировать"])
+
+       (when (not (= @form-copy @f)) [:button.btn.btn-default {:on-click #(reset! f @form-copy)
+                                                               :style {:margin-left "15px"}}
+                                      "Сбросить"])])))

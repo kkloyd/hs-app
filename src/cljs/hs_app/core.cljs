@@ -47,7 +47,7 @@
       (fn [] (let [edit-form (r/atom nil)]
                (get-patient! id edit-form)
                (fn []
-                 (if (not (nil? @edit-form))
+                 (when (not (nil? @edit-form))
                    [patients-form edit-form])))))))
 
 

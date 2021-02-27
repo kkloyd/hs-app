@@ -23,6 +23,7 @@
    [:meta {:charset "utf-8"}]
    [:meta {:name    "viewport"
            :content "width=device-width, initial-scale=1"}]
+   (include-css "https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css")
    (include-css (if (env :dev) "/css/site.css" "/css/site.min.css"))])
 
 
