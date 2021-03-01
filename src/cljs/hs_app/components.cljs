@@ -2,12 +2,26 @@
   (:require
    [reagent.core :as r]
    [accountant.core :as accountant]
+   [reagent-material-ui.core.snackbar :refer [snackbar]]
+   [reagent-material-ui.lab.alert :refer [alert]]
    [hs-app.util :refer [gender-str]]
    [hs-app.router :refer [path-for]]
+   [hs-app.states :refer [redirect-to-list? message]]
    [hs-app.api :refer [create-patient! edit-patient! delete-patient!]]))
 
 
-(defn log [object] (.dir js/console (clj->js object)))
+(defn message-popup []
+  (let [success (= true (:status-ok? @message))
+        fail (= false (:status-ok? @message))]
+
+    [snackbar {:anchor-origin {:vertical "top" :horizontal "center"}
+               :open (:show? @message)
+               :on-close #(when (= "timeout" %2) (reset! message nil))
+               :autoHideDuration 3000}
+     (when (not (nil? @message))
+       [alert {:severity (cond success "success" fail "error")}
+        (cond success  "Успешно"
+              fail "Не удалось")])]))
 
 
 ;; Patients List
@@ -50,46 +64,49 @@
    input])
 
 (defn patients-form [data]
-  (let [status-ok (r/atom nil)
-        f (r/atom (:patient @data))
-        form-copy (atom (:patient @data))
-        id (:id @f)]
-    (fn []
-      (cond (= @status-ok true) (do (accountant/navigate! (path-for :index)) (js/alert "Сохранено") (reset! status-ok nil))
-            (= @status-ok false) (do (js/alert "Не удалось") (reset! status-ok nil)))
-      [:div.patients-form
-       (form-item "ФИО" [:input {:type :text :value (:fullname @f) :size 100
-                                 :on-change #(swap! f assoc :fullname (-> % .-target .-value))}])
-       (form-item "Пол" [:select {:type :text :value (:gender @f)
-                                  :on-change #(swap! f assoc :gender (js/parseInt (-> % .-target .-value)))}
-                         [:option {:value -1} ""]
-                         [:option {:value 1} "М"]
-                         [:option {:value 0} "Ж"]])
+  (fn []
+    (let [f (r/atom (:patient @data))
+          initial-state (atom (:patient @data))
+          id (:id @f)]
+      (fn []
+        [:div
+         (cond @redirect-to-list? (do (accountant/navigate! (path-for :index)) (reset! redirect-to-list? nil)))
 
-       (form-item "Дата рождения" [:input {:type :date :value (:birth_date @f) :size 100
-                                           :on-change #(swap! f assoc :birth_date (-> % .-target .-value))}])
+         [:div.patients-form
+          (form-item "ФИО" [:input {:type :text :value (:fullname @f) :size 100
+                                    :on-change #(swap! f assoc :fullname (-> % .-target .-value))}])
+          (form-item "Пол" [:select {:type :text :value (:gender @f)
+                                     :on-change #(swap! f assoc :gender (js/parseInt (-> % .-target .-value)))}
+                            [:option {:value -1} ""]
+                            [:option {:value 1} "М"]
+                            [:option {:value 0} "Ж"]])
 
-
-       (form-item "Адрес"  [:input {:type :text :value (:address @f) :size 100
-                                    :on-change (fn [e]
-                                                 (let [val (-> e .-target .-value)]
-                                                   (swap! f assoc :address val)))}])
+          (form-item "Дата рождения" [:input {:type :date :value (:birth_date @f) :size 100
+                                              :on-change #(swap! f assoc :birth_date (-> % .-target .-value))}])
 
 
-       (form-item "Номер полиса ОМС" [:input {:type :number :value (:policy_number @f)
-                                              :required true
-                                              :on-change #(swap! f assoc :policy_number  (js/parseInt (-> % .-target .-value)))}])
+          (form-item "Адрес"  [:input {:type :text :value (:address @f) :size 100
+                                       :on-change (fn [e]
+                                                    (let [val (-> e .-target .-value)]
+                                                      (swap! f assoc :address val)))}])
 
 
-       (if (nil? id)
-         [:button.btn.btn-primary
-          {:on-click #(create-patient! @f status-ok) :disabled (= @form-copy @f)}
-          "Сохранить"]
+          (form-item "Номер полиса ОМС" [:input {:type :number :value (:policy_number @f)
+                                                 :required true
+                                                 :on-change #(swap! f assoc :policy_number (js/parseInt (-> % .-target .-value)))}])
 
-         [:button.btn.btn-success
-          {:on-click #(edit-patient! id (dissoc @f :id) status-ok) :disabled (= @form-copy @f)}
-          "Редактировать"])
 
-       (when (not (= @form-copy @f)) [:button.btn.btn-default {:on-click #(reset! f @form-copy)
-                                                               :style {:margin-left "15px"}}
-                                      "Сбросить"])])))
+          (if (nil? id)
+            [:button.btn.btn-primary
+             {:on-click #(create-patient! @f) :disabled (= @initial-state @f)}
+             "Сохранить"]
+
+            [:button.btn.btn-success
+             {:on-click #(edit-patient! id (dissoc @f :id)) :disabled (= @initial-state @f)}
+             "Редактировать"])
+
+          (when (not (= @initial-state @f)) [:button.btn.btn-default {:on-click #(reset! f @initial-state)
+                                                                      :style {:margin-left "15px"}}
+                                             "Сбросить"])]]))))
+
+

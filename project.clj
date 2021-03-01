@@ -19,6 +19,7 @@
                  [venantius/accountant "0.2.5"
                   :exclusions [org.clojure/tools.reader]]
                  [cljs-ajax "0.8.1"]
+                 [arttuka/reagent-material-ui "4.11.2-0"]
                  [org.postgresql/postgresql "42.2.18"]
                  [honeysql "1.0.444"]
                  [seancorfield/next.jdbc "1.1.613"]]

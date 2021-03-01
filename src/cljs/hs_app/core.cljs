@@ -8,7 +8,7 @@
    [accountant.core :as accountant]
    [hs-app.router :refer [router path-for]]
    [hs-app.states :refer [patients-data form-fields]]
-   [hs-app.components :refer [patients-list patients-form]]
+   [hs-app.components :refer [patients-list patients-form message-popup]]
    [hs-app.api :refer [fetch-patients! get-patient!]]))
 
 
@@ -17,23 +17,22 @@
 
 (defn home-page []
   (fetch-patients! patients-data)
-  (fn []
-    (cond (not (nil? @patients-data))
-      (let [data @patients-data
-            total (:total data)
-            patients (:patients data)]
-        [:<>
-         [:div.main__title
-          [:h1 "Список пациентов: " total]
+  (fn [] (when (not (nil? @patients-data))
+           (let [data @patients-data
+                 total (:total data)
+                 patients (:patients data)]
+             [:<>
+              [:div.main__title
+               [:h1.title "Список пациентов: " total]
 
-          [:a {:href (path-for :create-page)}
-           [:button.btn.btn-primary {:style {:margin-left "20px"}}
-            "Добавить"]]]
+               [:a {:href (path-for :create-page)}
+                [:button.btn.btn-primary {:style {:margin-left "20px"}}
+                 "Добавить"]]]
 
-         (if (> (count patients) 0)
-           [patients-list patients]
+              (if (> (count patients) 0)
+                [patients-list patients]
 
-           [:span "Нет данных"])]))))
+                [:span "Нет данных"])]))))
 
 
 
@@ -53,7 +52,6 @@
 
 ;; -------------------------
 ;; Translate routes -> page components
-
 (defn page-for [route]
   (case route
     :index #'home-page
@@ -68,6 +66,7 @@
   (fn []
     (let [page (:current-page (session/get :route))]
       [:div.page
+       [message-popup]
        [:header
         [:p.link [:a {:href (path-for :index)} "Пациенты"]]]
        [:div.main [page]]

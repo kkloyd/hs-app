@@ -23,7 +23,6 @@
    [:meta {:charset "utf-8"}]
    [:meta {:name    "viewport"
            :content "width=device-width, initial-scale=1"}]
-   (include-css "https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css")
    (include-css (if (env :dev) "/css/site.css" "/css/site.min.css"))])
 
 
@@ -40,7 +39,7 @@
     (include-js "/js/app.js")
     [:script "hs_app.core.init_BANG_()"]]))
 
-(defn index-handler
+(defn page-handler
   [_request]
   {:status  200
    :headers {"Content-Type" "text/html"}
@@ -48,10 +47,10 @@
 
 
 
-(def routes [["/" {:get {:handler index-handler}}]
-             ["/edit/:id" {:get {:handler index-handler
+(def routes [["/" {:get {:handler page-handler}}]
+             ["/edit/:id" {:get {:handler page-handler
                                  :parameters {:path {:id s/Int}}}}]
-             ["/create" {:get {:handler index-handler}}]
+             ["/create" {:get {:handler page-handler}}]
 
              ["/api"
               ["/patients" {:get get-patients ;; TODO add filter and pagination
