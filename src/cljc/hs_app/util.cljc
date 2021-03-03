@@ -5,9 +5,9 @@
   `(0 1))
 
 (defn in?
-  "true if coll contains elm"
-  [coll elm]
-  (some #(= elm %) coll))
+  "true if collection contains elm"
+  [collection elm]
+  (some #(= elm %) collection))
 
 (defn valid-gender?
   "check if value exists inside gender-types"

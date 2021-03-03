@@ -4,33 +4,31 @@
             [hs-app.services :as services]))
 
 (defn test-fixture [test]
-  (db/create-table-patients)
+  (db/create-table-patients!)
   (test)
-  (db/drop-table-patients))
+  (db/drop-table-patients!))
 
 
 (use-fixtures :each test-fixture)
 
-(defn create-patient [] (services/create-patient {:parameters {:body {:fullname "Test testovich Testov"
-                                                                      :gender 1
-                                                                      :birth_date "02.02.1912"
-                                                                      :address "221B Baker St, Marylebone, London NW1 6XE, UK"
-                                                                      :policy_number 423412341314}}}))
+(defn create-patient [] (services/create-patient! {:parameters {:body {:fullname "Test testovich Testov"
+                                                                       :gender 1
+                                                                       :birth_date "2020-01-01"
+                                                                       :address "221B Baker St, Marylebone, London NW1 6XE, UK"
+                                                                       :policy_number 423412341314}}}))
 
-(defn edit-patient [id] (services/edit-patient {:parameters {:path {:id id}
-                                                             :body {:fullname "Edited User"
-                                                                    :gender 0
-                                                                    :birth_date "02.02.1912"
-                                                                    :address "221B Baker St, Marylebone, London NW1 6XE, UK"
-                                                                    :policy_number 123412341314}}}))
+(defn edit-patient [id] (services/edit-patient! {:parameters {:path {:id id}
+                                                              :body {:fullname "Edited User"
+                                                                     :gender 0
+                                                                     :birth_date "2020-01-01"
+                                                                     :address "221B Baker St, Marylebone, London NW1 6XE, UK"
+                                                                     :policy_number 123412341314}}}))
 
 (defn delete-patient
-  [id] (services/delete-patient {:parameters {:path {:id id}}}))
+  [id] (services/delete-patient! {:parameters {:path {:id id}}}))
 
 (defn get-patient
   [id] (services/get-patient {:parameters {:path {:id id}}}))
-
-
 
 ;; Tests crud services
 (deftest get-empty-patients-test

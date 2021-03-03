@@ -3,9 +3,9 @@
    [hs-app.middleware :refer [middleware]]
    [hs-app.services :refer [get-patients
                             get-patient
-                            create-patient
-                            edit-patient
-                            delete-patient]]
+                            create-patient!
+                            edit-patient!
+                            delete-patient!]]
    [reitit.ring :as reitit-ring]
    [hiccup.page :refer [include-js include-css html5]]
    [config.core :refer [env]]
@@ -59,7 +59,7 @@
                                                        :birth_date s/Str
                                                        :address s/Str
                                                        :policy_number s/Int}}
-                                   :handler create-patient}}]
+                                   :handler create-patient!}}]
 
               ["/patient/:id" {:get {:parameters {:path {:id s/Int}}
                                      :handler get-patient}
@@ -69,9 +69,9 @@
                                                          :birth_date s/Str
                                                          :address s/Str
                                                          :policy_number s/Int}}
-                                     :handler edit-patient}
+                                     :handler edit-patient!}
                                :delete {:parameters {:path {:id s/Int}}
-                                        :handler delete-patient}}]]])
+                                        :handler delete-patient!}}]]])
 
 
 

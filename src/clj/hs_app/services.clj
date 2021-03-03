@@ -16,23 +16,23 @@
       {:status 200 :body {:patient patient}})))
 
 
-(defn create-patient [{:keys [parameters]}]
+(defn create-patient! [{:keys [parameters]}]
   (let [data (:body parameters)
         gender (:gender data)]
     (if (valid-gender? gender)
-      (let [patient (db/create-patient data)]
+      (let [patient (db/create-patient! data)]
         {:status 201
          :body {:patient patient}})
       {:status 400
        :body {:error (str "Not a valid gender " gender)}})))
 
 
-(defn edit-patient [{:keys [parameters]}]
+(defn edit-patient! [{:keys [parameters]}]
   (let [id (:id (:path parameters))
         data (:body parameters)
         gender (:gender data)]
     (if (valid-gender? gender)
-      (let [patient (db/update-patient id data)]
+      (let [patient (db/update-patient! id data)]
         (if (nil? patient)
           {:status 404 :body {:error (str "Patient with id " id " not found")}}
           {:status 200 :body {:patient patient}}))
@@ -40,9 +40,9 @@
        :body {:error (str "Not a valid gender " gender)}})))
 
 
-(defn delete-patient [{:keys [parameters]}]
+(defn delete-patient! [{:keys [parameters]}]
   (let [id (:id (:path parameters))
-        patient (db/delete-patient id)]
+        patient (db/delete-patient! id)]
     (if (nil? patient)
       {:status 404 :body {:error (str "Patient with id " id " not found")}}
       {:status 200 :body {:patient patient}})))
@@ -51,19 +51,19 @@
 
 (comment
 
-  (create-patient {:parameters {:body {:fullname "Sherlock Holmes"
+  (create-patient! {:parameters {:body {:fullname "Sherlock Holmes"
                                        :gender 1
-                                       :birth_date "02.02.1912"
+                                       :birth_date "1912-02-02"
                                        :address "221B Baker St, Marylebone, London NW1 6XE, UK"
                                        :policy_number 423412341314}}})
 
   (get-patients [])
   (get-patient {:parameters {:path {:id 3}}})
 
-  (edit-patient {:parameters {:path {:id 5}
+  (edit-patient! {:parameters {:path {:id 5}
                               :body {:fullname "Edited user"
                                      :gender 0
-                                     :birth_date "02.02.1912"
+                                     :birth_date "1912-02-02"
                                      :address "221B Baker St, Marylebone, London NW1 6XE, UK"
                                      :policy_number 123412341314}}})
 

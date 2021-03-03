@@ -56,6 +56,9 @@
         patients)])
 
 
+
+
+
 ;; Patients Form
 
 (defn form-item [label input]
@@ -73,28 +76,28 @@
          (cond @redirect-to-list? (do (accountant/navigate! (path-for :index)) (reset! redirect-to-list? nil)))
 
          [:div.patients-form
-          (form-item "ФИО" [:input {:type :text :value (:fullname @f) :size 100
-                                    :on-change #(swap! f assoc :fullname (-> % .-target .-value))}])
-          (form-item "Пол" [:select {:type :text :value (:gender @f)
+          [form-item "ФИО" [:input {:type :text :value (:fullname @f) :size 100
+                                    :on-change #(swap! f assoc :fullname (-> % .-target .-value))}]]
+          [form-item "Пол" [:select {:type :text :value (:gender @f)
                                      :on-change #(swap! f assoc :gender (js/parseInt (-> % .-target .-value)))}
                             [:option {:value -1} ""]
                             [:option {:value 1} "М"]
-                            [:option {:value 0} "Ж"]])
+                            [:option {:value 0} "Ж"]]]
 
-          (form-item "Дата рождения" [:input {:type :date :value (:birth_date @f) :size 100
-                                              :on-change #(swap! f assoc :birth_date (-> % .-target .-value))}])
-
-
-          (form-item "Адрес"  [:input {:type :text :value (:address @f) :size 100
-                                       :on-change (fn [e]
-                                                    (let [val (-> e .-target .-value)]
-                                                      (swap! f assoc :address val)))}])
+          [form-item "Дата рождения" [:input {:type :date :value (:birth_date @f) :size 100
+                                              :on-change #(swap! f assoc :birth_date (-> % .-target .-value))}]]
 
 
-          (form-item "Номер полиса ОМС" [:input {:type :number :value (:policy_number @f)
+          [form-item "Адрес"  [:input {:type :text :value (:address @f) :size 100
+                                       :on-change #(swap! f assoc :address (-> % .-target .-value))}]]
+
+
+          [form-item "Номер полиса ОМС" [:input {:type :number :value (:policy_number @f)
                                                  :required true
-                                                 :on-change #(swap! f assoc :policy_number (js/parseInt (-> % .-target .-value)))}])
-
+                                                 :on-change (fn [e] (let [val (-> e .-target .-value)]
+                                                                      (print val)
+                                                                      (when (>= 16 (count val))
+                                                                        (swap! f assoc :policy_number (js/parseInt val)))))}]]
 
           (if (nil? id)
             [:button.btn.btn-primary

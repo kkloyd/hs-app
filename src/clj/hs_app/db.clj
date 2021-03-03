@@ -28,7 +28,7 @@
                       {:return-keys true
                        :builder-fn rs/as-unqualified-maps}))
 
-(defn create-patient
+(defn create-patient!
   [{:keys [fullname gender birth_date address policy_number]}]
   (let [created (->
                  (hh/insert-into :patients)
@@ -55,7 +55,7 @@
                  db-query-one)]
     patient))
 
-(defn delete-patient [id]
+(defn delete-patient! [id]
   (let [deleted (->
                  (hh/delete-from :patients)
                  (hh/where := :id id)
@@ -63,7 +63,7 @@
                  db-query-one)]
     deleted))
 
-(defn update-patient [id {:keys [fullname gender birth_date address policy_number]}]
+(defn update-patient! [id {:keys [fullname gender birth_date address policy_number]}]
   (let [updated (->
                  (hh/update :patients)
                  (hh/sset {:fullname fullname
@@ -77,14 +77,14 @@
     updated))
 
 
-(defn create-table-patients [] (njdbc/execute! db ["CREATE TABLE patients(id SERIAL NOT NULL, 
+(defn create-table-patients! [] (njdbc/execute! db ["CREATE TABLE patients(id SERIAL NOT NULL, 
                       fullname VARCHAR(100) NOT NULL, 
                       gender SMALLINT NOT NULL, 
                       birth_date VARCHAR(20) NOT NULL, 
                       address VARCHAR(100) NOT NULL, 
                       policy_number BIGINT NOT NULL)"]))
 
-(defn drop-table-patients [] (njdbc/execute! db ["drop table patients"]))
+(defn drop-table-patients! [] (njdbc/execute! db ["drop table patients"]))
 
 
 (comment
@@ -107,9 +107,9 @@
 
   (get-all-patients)
   (get-patient-by-id 11)
-  (delete-patient 16)
+  (delete-patient! 16)
 
-  (create-patient {:fullname "Sherlock Holmes"
+  (create-patient! {:fullname "Sherlock Holmes"
                    :gender 1
                    :birth_date "01.01.1989"
                    :address "221B Baker St, Marylebone, London NW1 6XE, UK"
